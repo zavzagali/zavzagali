@@ -8,7 +8,7 @@
 
 <details>
 
-<img height="165" alt="Top languages" src="https://papka.zip/github_stats/api/top-langs/?username=misliaddict&layout=compact&count_private=true&disable_animations=true&border_radius=0&hide_border=false&bg_color=000000&title_color=FFFFFF&text_color=FFFFFF&border_color=FFFFFF"/>
+<img height="165" alt="Top languages" src="https://papka.zip/github_stats/api/top-langs/?username=zavzagali&layout=compact&count_private=true&disable_animations=true&border_radius=0&hide_border=false&bg_color=000000&title_color=FFFFFF&text_color=FFFFFF&border_color=FFFFFF"/>
 
 </details>
 
