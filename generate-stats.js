@@ -199,8 +199,6 @@ async function run() {
     streak: currentStreak(contrib.daily),
     repos: profile.publicRepos || allRepos.length,
     joined: joinedText(profile.createdAt),
-    additions: lifetime.additions,
-    deletions: lifetime.deletions,
   };
   fs.writeFileSync('assets/profile-stats.svg', buildProfileSvg(profile.login, profile.name, info, last7));
   console.log("assets/profile-stats.svg is updated.");
@@ -458,17 +456,14 @@ function buildProfileSvg(login, displayName, info, days) {
 
   const rows = [
     { pic: flameIcon, y: 40, html: `<tspan font-weight="700" fill="#cbcbcb">${info.streak} day${info.streak === 1 ? "" : "s"}</tspan> Current Streak` },
-    { icon: "★", y: 62, html: `<tspan font-weight="700" fill="#cbcbcb">${fmt(info.total)}</tspan> Contributions on GitHub` },
-    { icon: "▦", y: 106, html: `<tspan font-weight="700" fill="#cbcbcb">${fmt(info.repos)}</tspan> Public Repos` },
-    { icon: "◷", y: 128, html: esc(info.joined) },
+    { icon: "★", y: 68, html: `<tspan font-weight="700" fill="#cbcbcb">${fmt(info.total)}</tspan> Contributions on GitHub` },
+    { icon: "▦", y: 96, html: `<tspan font-weight="700" fill="#cbcbcb">${fmt(info.repos)}</tspan> Public Repos` },
+    { icon: "◷", y: 124, html: esc(info.joined) },
   ].map((r) => `
       <g transform="translate(20, ${r.y})">
         ${r.pic ? r.pic : `<text x="0" y="0" fill="#cbcbcb" font-family="-apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="13">${r.icon}</text>`}
         <text x="20" y="0" fill="#9e9e9e" font-family="-apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="12">${r.html}</text>
-      </g>`).join("") + `
-      <g transform="translate(40, 84)">
-        <text x="0" y="0" fill="#9e9e9e" font-family="-apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="11"><tspan fill="#3fb950">+${fmt(info.additions)}</tspan> <tspan fill="#f85149">−${fmt(info.deletions)}</tspan></text>
-      </g>`;
+      </g>`).join("");
 
   return `<svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" fill="none" xmlns="http://www.w3.org/2000/svg">
   <text x="580" y="14" fill="#9e9e9e" font-family="-apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="10" text-anchor="end">contributions in the last 7 days</text>
