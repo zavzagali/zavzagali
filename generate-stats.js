@@ -150,15 +150,6 @@ async function run() {
   const last7 = contrib.daily.slice(-7);
   const lifetime = await getLifetimeDiffStats(allRepos);
 
-  const gqlTotal = await getLifetimeCommitCountViaGraphQL(profile.login, profile.createdAt);
-  if (gqlTotal != null) {
-    console.log(`lifetime-check: rest-commits=${lifetime.commits} graphql-totalCommitContributions=${gqlTotal}`);
-    if (gqlTotal > lifetime.commits) {
-      console.log(`lifetime-check: using GraphQL count (${gqlTotal}) as it is higher`);
-      lifetime.commits = gqlTotal;
-    }
-  }
-
   for (const [repoFull, m] of lifetime.byRepoLang) {
     const summary = [...m.entries()].sort((a, b) => b[1] - a[1]).map(([n, cnt]) => `${n}: ${fmt(cnt)} lines`).join("; ");
     console.log(`langs: ${repoFull} ${summary || "(no tracked languages)"}`);
@@ -186,7 +177,6 @@ async function run() {
     streak: currentStreak(contrib.daily),
     repos: profile.publicRepos || allRepos.length,
     joined: joinedText(profile.createdAt),
-    commits: lifetime.commits,
     additions: lifetime.additions,
     deletions: lifetime.deletions,
   };
@@ -217,43 +207,6 @@ async function getContributionCalendar(login) {
     const daily = cal.weeks.flatMap(w => w.contributionDays.map(d => ({ date: d.date, count: d.contributionCount })));
     if (!daily.length) return null;
     return { daily, total: cal.totalContributions || 0 };
-  } catch {
-    return null;
-  }
-}
-
-async function getLifetimeCommitCountViaGraphQL(login, createdAt) {
-  const token = process.env.GH_TOKEN;
-  if (!token || !createdAt) return null;
-  try {
-    const res = await fetch("https://api.github.com/graphql", {
-      method: "POST",
-      headers: {
-        "Authorization": `Bearer ${token}`,
-        "Content-Type": "application/json",
-        "User-Agent": "github-stats-card",
-      },
-      body: JSON.stringify({
-        query: "query($login:String!,$from:DateTime!,$to:DateTime!){ user(login:$login){ contributionsCollection(from:$from,to:$to){ totalCommitContributions commitContributionsByRepository(maxRepositories:100){ repository{ nameWithOwner } contributions{ totalCount } } } } }",
-        variables: { login, from: createdAt, to: new Date().toISOString() },
-      }),
-    });
-    if (!res.ok) return null;
-    const json = await res.json();
-    const cc = json?.data?.user?.contributionsCollection;
-    const n = cc?.totalCommitContributions;
-    if (typeof n !== "number") return null;
-    let excludedCommits = 0;
-    for (const entry of cc?.commitContributionsByRepository || []) {
-      const full = entry?.repository?.nameWithOwner;
-      if (full && isExcluded(full)) {
-        excludedCommits += entry?.contributions?.totalCount || 0;
-      }
-    }
-    if (excludedCommits) {
-      console.log(`lifetime-check: GraphQL total ${n} minus excluded (${excludedCommits})`);
-    }
-    return n - excludedCommits;
   } catch {
     return null;
   }
@@ -447,7 +400,7 @@ function tickLabel(iso) {
 
 function buildProfileSvg(login, displayName, info, days) {
   const W = 600;
-  const H = 179;
+  const H = 161;
   const plotX0 = 205;
   const plotX1 = 556;
   const plotY0 = 24;
@@ -477,15 +430,14 @@ function buildProfileSvg(login, displayName, info, days) {
   const rows = [
     { pic: flameIcon, y: 40, html: `<tspan font-weight="700" fill="#cbcbcb">${info.streak} day${info.streak === 1 ? "" : "s"}</tspan> Current Streak` },
     { icon: "★", y: 62, html: `<tspan font-weight="700" fill="#cbcbcb">${fmt(info.total)}</tspan> Contributions on GitHub` },
-    { icon: "⎘", y: 84, html: `<tspan font-weight="700" fill="#cbcbcb">${fmt(info.commits)}</tspan> Lifetime Commits` },
-    { icon: "▦", y: 110, html: `<tspan font-weight="700" fill="#cbcbcb">${fmt(info.repos)}</tspan> Public Repos` },
-    { icon: "◷", y: 134, html: esc(info.joined) },
+    { icon: "▦", y: 106, html: `<tspan font-weight="700" fill="#cbcbcb">${fmt(info.repos)}</tspan> Public Repos` },
+    { icon: "◷", y: 128, html: esc(info.joined) },
   ].map((r) => `
       <g transform="translate(20, ${r.y})">
         ${r.pic ? r.pic : `<text x="0" y="0" fill="#cbcbcb" font-family="-apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="13">${r.icon}</text>`}
         <text x="20" y="0" fill="#9e9e9e" font-family="-apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="12">${r.html}</text>
       </g>`).join("") + `
-      <g transform="translate(40, 97)">
+      <g transform="translate(40, 84)">
         <text x="0" y="0" fill="#9e9e9e" font-family="-apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="11"><tspan fill="#3fb950">+${fmt(info.additions)}</tspan> <tspan fill="#f85149">−${fmt(info.deletions)}</tspan></text>
       </g>`;
 
