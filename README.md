@@ -4,9 +4,16 @@
 </p>
 
 <p align="center">
-  <img src="profile-stats.svg" alt="contribution stats" />
+  <img src="assets/profile-stats.svg" alt="contribution stats" />
 </p>
 
-<p align="center">
-  <img src="stats.svg" alt="top languages" />
-</p>
+<table align="center">
+  <tr>
+    <td>
+      <img src="assets/stats.svg" alt="top languages" />
+    </td>
+    <td>
+      <img src="assets/lang-diff.svg" alt="lines added and deleted per language" />
+    </td>
+  </tr>
+</table>

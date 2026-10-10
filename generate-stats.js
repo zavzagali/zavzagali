@@ -169,8 +169,30 @@ async function run() {
       color: Object.values(LANGS).find(x => x.n === n)?.c || "#858585"
     }));
 
-  fs.writeFileSync('stats.svg', buildSvg(name, sorted));
-  console.log("stats.svg is updated.");
+  fs.writeFileSync('assets/stats.svg', buildSvg(name, sorted));
+  console.log("assets/stats.svg is updated.");
+
+  const diffTotals = new Map();
+  for (const m of lifetime.byRepoLangDiff.values()) {
+    for (const [n, e] of m) {
+      const t = diffTotals.get(n) || { a: 0, d: 0 };
+      t.a += e.a;
+      t.d += e.d;
+      diffTotals.set(n, t);
+    }
+  }
+  const diffSorted = [...diffTotals.entries()]
+    .sort((a, b) => (b[1].a + b[1].d) - (a[1].a + a[1].d))
+    .slice(0, 8)
+    .map(([n, e]) => ({
+      name: n,
+      color: Object.values(LANGS).find(x => x.n === n)?.c || "#858585",
+      add: e.a,
+      del: e.d
+    }));
+
+  fs.writeFileSync('assets/lang-diff.svg', buildLangDiffSvg(diffSorted));
+  console.log("assets/lang-diff.svg is updated.");
 
   const info = {
     total: contrib.total,
@@ -180,8 +202,8 @@ async function run() {
     additions: lifetime.additions,
     deletions: lifetime.deletions,
   };
-  fs.writeFileSync('profile-stats.svg', buildProfileSvg(profile.login, profile.name, info, last7));
-  console.log("profile-stats.svg is updated.");
+  fs.writeFileSync('assets/profile-stats.svg', buildProfileSvg(profile.login, profile.name, info, last7));
+  console.log("assets/profile-stats.svg is updated.");
 }
 
 async function getContributionCalendar(login) {
@@ -320,6 +342,7 @@ async function getLifetimeDiffStats(allRepos) {
   let failed = 0;
   let failStatus = "";
   const byRepoLang = new Map();
+  const byRepoLangDiff = new Map();
   let jobs = [...shas].map(([sha, loc]) => ({ owner: loc.owner, repo: loc.repo, full: loc.full, sha }));
   if (jobs.length > MAX_DETAIL) {
     console.log(`diff-stats: ${jobs.length} commits found, detail fetch capped at ${MAX_DETAIL} (set LIFETIME_MAX_COMMITS to raise) TRUNCATED-BY-CAP`);
@@ -349,12 +372,18 @@ async function getLifetimeDiffStats(allRepos) {
           if (!byRepoLang.has(r.job.full)) byRepoLang.set(r.job.full, new Map());
           const m = byRepoLang.get(r.job.full);
           m.set(l, (m.get(l) || 0) + (f.changes || 0));
+          if (!byRepoLangDiff.has(r.job.full)) byRepoLangDiff.set(r.job.full, new Map());
+          const md = byRepoLangDiff.get(r.job.full);
+          const e = md.get(l) || { a: 0, d: 0 };
+          e.a += f.additions || 0;
+          e.d += f.deletions || 0;
+          md.set(l, e);
         }
       }
     }
   }
   console.log(`diff-stats: commits=${commits} +${additions} -${deletions} failed=${failed}${failStatus ? ` first-fail-status=${failStatus}` : ""}${shas.size > jobs.length ? " TRUNCATED-BY-CAP" : ""}`);
-  return { commits, additions, deletions, byRepoLang };
+  return { commits, additions, deletions, byRepoLang, byRepoLangDiff };
 }
 
 async function searchCount(q) {
@@ -482,6 +511,26 @@ function buildSvg(name, langs) {
   <rect x="25" y="15" width="296" height="8" rx="4" fill="#2d3748"/>
   <g mask="url(#m)">${bars}</g>
   <mask id="m"><rect x="25" y="15" width="296" height="8" rx="4" fill="#fff"/></mask>
+  ${items}
+</svg>`;
+}
+
+function buildLangDiffSvg(langs) {
+  const W = 280;
+  const rowH = 22;
+  const top = 18;
+  const font = "-apple-system, BlinkMacSystemFont, Segoe UI, sans-serif";
+
+  const items = langs.map((l, i) => `
+      <g transform="translate(25, ${top + i * rowH})">
+        <circle cx="6" cy="6" r="6" fill="${l.color}" />
+        <text x="18" y="10" fill="#9e9e9e" font-family="${font}" font-size="12">${l.name}</text>
+        <text x="230" y="10" fill="#9e9e9e" font-family="${font}" font-size="12" text-anchor="end"><tspan fill="#3fb950">+${fmt(l.add)}</tspan> <tspan fill="#f85149">−${fmt(l.del)}</tspan></text>
+      </g>`).join("");
+
+  const height = top + langs.length * rowH;
+
+  return `<svg width="${W}" height="${height}" viewBox="0 0 ${W} ${height}" fill="none" xmlns="http://www.w3.org/2000/svg">
   ${items}
 </svg>`;
 }
