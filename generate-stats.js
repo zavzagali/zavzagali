@@ -101,14 +101,13 @@ function buildSvg(name, langs) {
 
   const height = 85 + Math.ceil(langs.length / 2) * 22;
 
-  return `
-    <svg width="346" height="${height}" viewBox="0 0 346 ${height}" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <text x="25" y="30" font="600 14px -apple-system, sans-serif" fill="#cbcbcb">${name}'s Top Languages</text>
-      <rect x="25" y="45" width="296" height="8" rx="4" fill="#2d3748"/>
-      <g mask="url(#m)">${bars}</g>
-      <mask id="m"><rect x="25" y="45" width="296" height="8" rx="4" fill="#fff"/></mask>
-      ${items}
-    </svg>`;
+  return `<svg width="346" height="${height}" viewBox="0 0 346 ${height}" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <text x="25" y="30" font-weight="600" font-family="-apple-system, sans-serif" font-size="14" fill="#cbcbcb">${name}'s Top Languages</text>
+  <rect x="25" y="45" width="296" height="8" rx="4" fill="#2d3748"/>
+  <g mask="url(#m)">${bars}</g>
+  <mask id="m"><rect x="25" y="45" width="296" height="8" rx="4" fill="#fff"/></mask>
+  ${items}
+</svg>`;
 }
 
 run();
