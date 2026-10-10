@@ -215,21 +215,13 @@ function tickLabel(iso) {
   return `${parts[2]}/${parts[1]}`;
 }
 
-function cardTitle(login, name) {
-  if (!name) return login;
-  const full = `${login} (${name})`;
-  if (full.length <= 24) return full;
-  const keep = Math.max(24 - login.length - 5, 3);
-  return `${login} (${name.slice(0, keep).trim()}...)`;
-}
-
 function buildProfileSvg(login, displayName, info, days) {
   const W = 600;
-  const H = 185;
+  const H = 161;
   const plotX0 = 205;
   const plotX1 = 556;
-  const plotY0 = 48;
-  const plotY1 = 148;
+  const plotY0 = 24;
+  const plotY1 = 124;
   const axisX = 570;
 
   const data = (days && days.length ? days.slice(-7) : [{ date: new Date().toISOString().slice(0, 10), count: 0 }]);
@@ -247,7 +239,7 @@ function buildProfileSvg(login, displayName, info, days) {
   for (let t = 0; t < 7; t++) {
     const di = Math.round((t * (n - 1)) / 6);
     const x = px(di);
-    labels += `<text x="${x.toFixed(1)}" y="166" fill="#9e9e9e" font-family="-apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="9.5" text-anchor="middle">${tickLabel(data[di].date)}</text>`;
+    labels += `<text x="${x.toFixed(1)}" y="142" fill="#9e9e9e" font-family="-apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="9.5" text-anchor="middle">${tickLabel(data[di].date)}</text>`;
   }
 
   const flameIcon = `<g transform="translate(0,-12) scale(0.8125)"><path d="M8 1C11 5 13 7.5 13 11a5 5 0 0 1-10 0C3 7.5 5 5 8 1Z M8 7c1.2 1.8 2 2.8 2 4.2a2 2 0 0 1-4 0C6 9.8 6.8 8.8 8 7Z" fill="#cbcbcb" fill-rule="evenodd"/></g>`;
@@ -259,14 +251,13 @@ function buildProfileSvg(login, displayName, info, days) {
     { icon: "◷", html: esc(info.joined) },
     { icon: "✉", html: esc(info.contact) },
   ].map((r, i) => `
-      <g transform="translate(20, ${64 + i * 24})">
+      <g transform="translate(20, ${40 + i * 24})">
         ${r.pic ? r.pic : `<text x="0" y="0" fill="#cbcbcb" font-family="-apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="13">${r.icon}</text>`}
         <text x="20" y="0" fill="#9e9e9e" font-family="-apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="12">${r.html}</text>
       </g>`).join("");
 
   return `<svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <text x="20" y="30" font-weight="600" font-family="-apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="14" fill="#cbcbcb">${esc(cardTitle(login, displayName))}</text>
-  <text x="580" y="26" fill="#9e9e9e" font-family="-apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="10" text-anchor="end">contributions in the last 7 days</text>
+  <text x="20" y="22" fill="#9e9e9e" font-family="-apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="11">contributions in the last 7 days</text>
   ${rows}
   <path d="${area}" fill="#cbcbcb" opacity="0.15"/>
   <polyline points="${pts}" fill="none" stroke="#cbcbcb" stroke-width="1.5"/>
@@ -286,27 +277,26 @@ function buildSvg(name, langs) {
     if (w <= 0) return '';
     const x = acc;
     acc += w;
-    return `<rect x="${25 + x}" y="45" width="${w}" height="8" fill="${l.color}" />`;
+    return `<rect x="${25 + x}" y="15" width="${w}" height="8" fill="${l.color}" />`;
   }).join("");
 
   const items = langs.map((l, i) => {
     const col = i % 2;
     const row = Math.floor(i / 2);
     return `
-      <g transform="translate(${col === 0 ? 25 : 175}, ${75 + row * 22})">
+      <g transform="translate(${col === 0 ? 25 : 175}, ${45 + row * 22})">
         <circle cx="6" cy="6" r="6" fill="${l.color}" />
         <text x="18" y="10" fill="#9e9e9e" font-family="-apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="12">${l.name}</text>
         <text x="130" y="10" fill="#9e9e9e" font-family="-apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="12" text-anchor="end">${l.pct}%</text>
       </g>`;
   }).join("");
 
-  const height = 85 + Math.ceil(langs.length / 2) * 22;
+  const height = 55 + Math.ceil(langs.length / 2) * 22;
 
   return `<svg width="346" height="${height}" viewBox="0 0 346 ${height}" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <text x="25" y="30" font-weight="600" font-family="-apple-system, sans-serif" font-size="14" fill="#cbcbcb">${name}'s Top Languages</text>
-  <rect x="25" y="45" width="296" height="8" rx="4" fill="#2d3748"/>
+  <rect x="25" y="15" width="296" height="8" rx="4" fill="#2d3748"/>
   <g mask="url(#m)">${bars}</g>
-  <mask id="m"><rect x="25" y="45" width="296" height="8" rx="4" fill="#fff"/></mask>
+  <mask id="m"><rect x="25" y="15" width="296" height="8" rx="4" fill="#fff"/></mask>
   ${items}
 </svg>`;
 }
