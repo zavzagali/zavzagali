@@ -7,6 +7,10 @@
   <img src="assets/profile-stats.svg" alt="contribution stats" />
 </p>
 
+<p align="center">
+  <img src="assets/issues-prs.svg" alt="issues and pull requests" />
+</p>
+
 <table align="center">
   <tr>
     <td>

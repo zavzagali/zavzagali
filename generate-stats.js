@@ -202,6 +202,10 @@ async function run() {
   };
   fs.writeFileSync('assets/profile-stats.svg', buildProfileSvg(profile.login, profile.name, info, last7));
   console.log("assets/profile-stats.svg is updated.");
+
+  const issuePr = await getIssuePrStats();
+  fs.writeFileSync('assets/issues-prs.svg', buildIssuePrSvg(issuePr));
+  console.log("assets/issues-prs.svg is updated.");
 }
 
 async function getContributionCalendar(login) {
@@ -386,11 +390,30 @@ async function getLifetimeDiffStats(allRepos) {
 
 async function searchCount(q) {
   try {
-    const res = await octokit.search.issuesAndPullRequests({ q, per_page: 1 });
+    const res = await withRetry(
+      () => octokit.search.issuesAndPullRequests({ q, per_page: 1 }),
+      `search ${q}`
+    );
     return res.data.total_count || 0;
-  } catch {
+  } catch (e) {
+    console.log(`searchCount failed for "${q}" (${e?.status || e?.message}), using 0`);
     return 0;
   }
+}
+
+async function getIssuePrStats() {
+  const [prTotal, prMerged, prOpen, prDrafts, issueTotal, issueClosed, issueOpen] = await Promise.all([
+    searchCount(`author:${user} type:pr`),
+    searchCount(`author:${user} type:pr is:merged`),
+    searchCount(`author:${user} type:pr is:open`),
+    searchCount(`author:${user} type:pr is:draft`),
+    searchCount(`author:${user} type:issue`),
+    searchCount(`author:${user} type:issue is:closed`),
+    searchCount(`author:${user} type:issue is:open`),
+  ]);
+  const prClosed = Math.max(0, prTotal - prMerged - prOpen);
+  console.log(`issues-prs: prs=${prTotal} merged=${prMerged} closed=${prClosed} open=${prOpen} drafts=${prDrafts} issues=${issueTotal} closed=${issueClosed} open=${issueOpen}`);
+  return { prTotal, prMerged, prClosed, prOpen, prDrafts, issueTotal, issueClosed, issueOpen };
 }
 
 function currentStreak(daily) {
@@ -527,6 +550,78 @@ function buildLangDiffSvg(langs) {
 
   return `<svg width="${W}" height="${height}" viewBox="0 0 ${W} ${height}" fill="none" xmlns="http://www.w3.org/2000/svg">
   ${items}
+</svg>`;
+}
+
+function buildIssuePrSvg(s) {
+  const W = 626;
+  const H = 108;
+  const font = "-apple-system, BlinkMacSystemFont, Segoe UI, sans-serif";
+  const bg = "#0d1117";
+  const label = "#8b949e";
+  const bright = "#e6edf3";
+  const green = "#3fb950";
+  const purple = "#a371f7";
+  const red = "#f85149";
+  const gray = "#6e7681";
+  const blue = "#58a6ff";
+
+  const prTotal = s?.prTotal || 0;
+  const prMerged = s?.prMerged || 0;
+  const prOpen = s?.prOpen || 0;
+  const prDrafts = s?.prDrafts || 0;
+  const prClosed = s?.prClosed ?? Math.max(0, prTotal - prMerged - prOpen);
+  const issueTotal = s?.issueTotal || 0;
+  const issueClosed = s?.issueClosed || 0;
+  const issueOpen = s?.issueOpen || 0;
+  const issueDrafts = 0;
+  const issueSkipped = 0;
+
+  const panelW = 283;
+  const barH = 8;
+
+  const segs = (total, parts) => {
+    let acc = 0;
+    return parts.map(([n, color]) => {
+      const w = total > 0 ? (n / total) * panelW : 0;
+      if (w <= 0) return '';
+      const x = acc;
+      acc += w;
+      return `<rect x="${x.toFixed(1)}" y="0" width="${w.toFixed(1)}" height="${barH}" fill="${color}" />`;
+    }).join("");
+  };
+  const bar = (total, parts, maskId) => `
+      <rect x="0" y="0" width="${panelW}" height="${barH}" rx="4" fill="#21262d"/>
+      <g mask="url(#${maskId})">${segs(total, parts)}</g>
+      <mask id="${maskId}"><rect x="0" y="0" width="${panelW}" height="${barH}" rx="4" fill="#fff"/></mask>`;
+
+  const stat = (x, y, icon, iconColor, n, text) => `
+      <text x="${x}" y="${y}" fill="${iconColor}" font-family="${font}" font-size="13">${icon}</text>
+      <text x="${x + 20}" y="${y}" fill="${label}" font-family="${font}" font-size="12"><tspan fill="${bright}" font-weight="700">${fmt(n)}</tspan> ${text}</text>`;
+
+  const panel = (x, title, titleColor, barSvg, rows) => `
+    <g transform="translate(${x}, 0)">
+      <text x="${(panelW / 2).toFixed(1)}" y="22" fill="${titleColor}" font-family="${font}" font-size="14" font-weight="600" text-anchor="middle">${title}</text>
+      <g transform="translate(0, 32)">${barSvg}</g>
+      ${rows}
+    </g>`;
+
+  const lx = 20;
+  const rx = 323;
+  const col2 = 150;
+  const r1 = 68;
+  const r2 = 90;
+
+  return `<svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect x="0.5" y="0.5" width="${W - 1}" height="${H - 1}" rx="6" fill="${bg}"/>
+  ${panel(lx, "Issues", green,
+    bar(issueTotal, [[issueOpen, green], [issueClosed, purple]], "m-issue"),
+    stat(0, r1, "○", green, issueOpen, "open") + stat(col2, r1, "✓", purple, issueClosed, "closed") +
+    stat(0, r2, "◌", gray, issueDrafts, "drafts") + stat(col2, r2, "⊘", gray, issueSkipped, "skipped"))}
+  ${panel(rx, "Pull requests", blue,
+    bar(prTotal, [[prOpen, green], [prClosed, red], [prMerged, purple]], "m-pr"),
+    stat(0, r1, "⑂", green, prOpen, "open") + stat(col2, r1, "⑂", purple, prMerged, "merged") +
+    stat(0, r2, "◌", gray, prDrafts, "drafts") + stat(col2, r2, "⑂", red, prClosed, "closed"))}
 </svg>`;
 }
 
