@@ -5,27 +5,24 @@
         <g transform="translate(0,-12) scale(0.8125)"><path d="M8 1C11 5 13 7.5 13 11a5 5 0 0 1-10 0C3 7.5 5 5 8 1Z M8 7c1.2 1.8 2 2.8 2 4.2a2 2 0 0 1-4 0C6 9.8 6.8 8.8 8 7Z" fill="#cbcbcb" fill-rule="evenodd"/></g>
         <text x="20" y="0" fill="#9e9e9e" font-family="-apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="12"><tspan font-weight="700" fill="#cbcbcb">2 days</tspan> Current Streak</text>
       </g>
-      <g transform="translate(20, 62)">
+      <g transform="translate(20, 68)">
         <text x="0" y="0" fill="#cbcbcb" font-family="-apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="13">★</text>
-        <text x="20" y="0" fill="#9e9e9e" font-family="-apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="12"><tspan font-weight="700" fill="#cbcbcb">195</tspan> Contributions on GitHub</text>
+        <text x="20" y="0" fill="#9e9e9e" font-family="-apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="12"><tspan font-weight="700" fill="#cbcbcb">197</tspan> Contributions on GitHub</text>
       </g>
-      <g transform="translate(20, 106)">
+      <g transform="translate(20, 96)">
         <text x="0" y="0" fill="#cbcbcb" font-family="-apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="13">▦</text>
         <text x="20" y="0" fill="#9e9e9e" font-family="-apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="12"><tspan font-weight="700" fill="#cbcbcb">8</tspan> Public Repos</text>
       </g>
-      <g transform="translate(20, 128)">
+      <g transform="translate(20, 124)">
         <text x="0" y="0" fill="#cbcbcb" font-family="-apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="13">◷</text>
         <text x="20" y="0" fill="#9e9e9e" font-family="-apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="12">Joined GitHub 4 years ago</text>
       </g>
-      <g transform="translate(40, 84)">
-        <text x="0" y="0" fill="#9e9e9e" font-family="-apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="11"><tspan fill="#3fb950">+10,025</tspan> <tspan fill="#f85149">−2,549</tspan></text>
-      </g>
-  <path d="M 205,124 L 205.0,124.0 L 263.5,124.0 L 322.0,124.0 L 380.5,124.0 L 439.0,124.0 L 497.5,103.6 L 556.0,32.0 L 556,124 Z" fill="#cbcbcb" opacity="0.15"/>
-  <polyline points="205.0,124.0 263.5,124.0 322.0,124.0 380.5,124.0 439.0,124.0 497.5,103.6 556.0,32.0" fill="none" stroke="#cbcbcb" stroke-width="1.5"/>
-  <circle cx="205.0" cy="124.0" r="2.5" fill="#cbcbcb"/><circle cx="263.5" cy="124.0" r="2.5" fill="#cbcbcb"/><circle cx="322.0" cy="124.0" r="2.5" fill="#cbcbcb"/><circle cx="380.5" cy="124.0" r="2.5" fill="#cbcbcb"/><circle cx="439.0" cy="124.0" r="2.5" fill="#cbcbcb"/><circle cx="497.5" cy="103.6" r="2.5" fill="#cbcbcb"/><circle cx="556.0" cy="32.0" r="2.5" fill="#cbcbcb"/>
+  <path d="M 205,124 L 205.0,124.0 L 263.5,124.0 L 322.0,124.0 L 380.5,124.0 L 439.0,99.8 L 497.5,32.0 L 556.0,124.0 L 556,124 Z" fill="#cbcbcb" opacity="0.15"/>
+  <polyline points="205.0,124.0 263.5,124.0 322.0,124.0 380.5,124.0 439.0,99.8 497.5,32.0 556.0,124.0" fill="none" stroke="#cbcbcb" stroke-width="1.5"/>
+  <circle cx="205.0" cy="124.0" r="2.5" fill="#cbcbcb"/><circle cx="263.5" cy="124.0" r="2.5" fill="#cbcbcb"/><circle cx="322.0" cy="124.0" r="2.5" fill="#cbcbcb"/><circle cx="380.5" cy="124.0" r="2.5" fill="#cbcbcb"/><circle cx="439.0" cy="99.8" r="2.5" fill="#cbcbcb"/><circle cx="497.5" cy="32.0" r="2.5" fill="#cbcbcb"/><circle cx="556.0" cy="124.0" r="2.5" fill="#cbcbcb"/>
   <line x1="570" y1="24" x2="570" y2="124" stroke="#2d3748" stroke-width="1"/>
   <line x1="565" y1="24" x2="570" y2="24" stroke="#2d3748" stroke-width="1"/>
-  <text x="563" y="27" fill="#9e9e9e" font-family="-apple-system, sans-serif" font-size="9" text-anchor="end">18</text>
+  <text x="563" y="27" fill="#9e9e9e" font-family="-apple-system, sans-serif" font-size="9" text-anchor="end">19</text>
   <text x="563" y="127" fill="#9e9e9e" font-family="-apple-system, sans-serif" font-size="9" text-anchor="end">0</text>
-  <text x="205.0" y="142" fill="#9e9e9e" font-family="-apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="9.5" text-anchor="middle">04/10</text><text x="263.5" y="142" fill="#9e9e9e" font-family="-apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="9.5" text-anchor="middle">05/10</text><text x="322.0" y="142" fill="#9e9e9e" font-family="-apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="9.5" text-anchor="middle">06/10</text><text x="380.5" y="142" fill="#9e9e9e" font-family="-apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="9.5" text-anchor="middle">07/10</text><text x="439.0" y="142" fill="#9e9e9e" font-family="-apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="9.5" text-anchor="middle">08/10</text><text x="497.5" y="142" fill="#9e9e9e" font-family="-apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="9.5" text-anchor="middle">09/10</text><text x="556.0" y="142" fill="#9e9e9e" font-family="-apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="9.5" text-anchor="middle">10/10</text>
+  <text x="205.0" y="142" fill="#9e9e9e" font-family="-apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="9.5" text-anchor="middle">05/10</text><text x="263.5" y="142" fill="#9e9e9e" font-family="-apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="9.5" text-anchor="middle">06/10</text><text x="322.0" y="142" fill="#9e9e9e" font-family="-apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="9.5" text-anchor="middle">07/10</text><text x="380.5" y="142" fill="#9e9e9e" font-family="-apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="9.5" text-anchor="middle">08/10</text><text x="439.0" y="142" fill="#9e9e9e" font-family="-apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="9.5" text-anchor="middle">09/10</text><text x="497.5" y="142" fill="#9e9e9e" font-family="-apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="9.5" text-anchor="middle">10/10</text><text x="556.0" y="142" fill="#9e9e9e" font-family="-apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="9.5" text-anchor="middle">11/10</text>
 </svg>
