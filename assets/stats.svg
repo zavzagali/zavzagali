@@ -1,31 +1,36 @@
 <svg width="346" height="121" viewBox="0 0 346 121" fill="none" xmlns="http://www.w3.org/2000/svg">
   <rect x="25" y="15" width="296" height="8" rx="4" fill="#2d3748"/>
-  <g mask="url(#m)"><rect x="25" y="15" width="96.49600000000001" height="8" fill="#f1e05a" /><rect x="121.49600000000001" y="15" width="79.032" height="8" fill="#0b4f87" /><rect x="200.52800000000002" y="15" width="48.248000000000005" height="8" fill="#563d7c" /><rect x="248.776" y="15" width="36.704" height="8" fill="#f34b7d" /><rect x="285.48" y="15" width="35.224000000000004" height="8" fill="#3178c6" /></g>
+  <g mask="url(#m)"><rect x="25" y="15" width="86.13600000000001" height="8" fill="#f1e05a" /><rect x="111.13600000000001" y="15" width="68.08" height="8" fill="#0b4f87" /><rect x="179.216" y="15" width="41.44" height="8" fill="#563d7c" /><rect x="220.656" y="15" width="37.888000000000005" height="8" fill="#b07219" /><rect x="258.544" y="15" width="31.968000000000004" height="8" fill="#f34b7d" /><rect x="290.512" y="15" width="30.488000000000003" height="8" fill="#3178c6" /></g>
   <mask id="m"><rect x="25" y="15" width="296" height="8" rx="4" fill="#fff"/></mask>
   
       <g transform="translate(25, 45)">
         <circle cx="6" cy="6" r="6" fill="#f1e05a" />
         <text x="18" y="10" fill="#9e9e9e" font-family="-apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="12">JavaScript</text>
-        <text x="130" y="10" fill="#9e9e9e" font-family="-apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="12" text-anchor="end">32.6%</text>
+        <text x="130" y="10" fill="#9e9e9e" font-family="-apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="12" text-anchor="end">29.1%</text>
       </g>
       <g transform="translate(175, 45)">
         <circle cx="6" cy="6" r="6" fill="#0b4f87" />
         <text x="18" y="10" fill="#9e9e9e" font-family="-apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="12">Python</text>
-        <text x="130" y="10" fill="#9e9e9e" font-family="-apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="12" text-anchor="end">26.7%</text>
+        <text x="130" y="10" fill="#9e9e9e" font-family="-apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="12" text-anchor="end">23.0%</text>
       </g>
       <g transform="translate(25, 67)">
         <circle cx="6" cy="6" r="6" fill="#563d7c" />
         <text x="18" y="10" fill="#9e9e9e" font-family="-apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="12">CSS</text>
-        <text x="130" y="10" fill="#9e9e9e" font-family="-apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="12" text-anchor="end">16.3%</text>
+        <text x="130" y="10" fill="#9e9e9e" font-family="-apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="12" text-anchor="end">14.0%</text>
       </g>
       <g transform="translate(175, 67)">
-        <circle cx="6" cy="6" r="6" fill="#f34b7d" />
-        <text x="18" y="10" fill="#9e9e9e" font-family="-apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="12">C++</text>
-        <text x="130" y="10" fill="#9e9e9e" font-family="-apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="12" text-anchor="end">12.4%</text>
+        <circle cx="6" cy="6" r="6" fill="#b07219" />
+        <text x="18" y="10" fill="#9e9e9e" font-family="-apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="12">Java</text>
+        <text x="130" y="10" fill="#9e9e9e" font-family="-apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="12" text-anchor="end">12.8%</text>
       </g>
       <g transform="translate(25, 89)">
+        <circle cx="6" cy="6" r="6" fill="#f34b7d" />
+        <text x="18" y="10" fill="#9e9e9e" font-family="-apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="12">C++</text>
+        <text x="130" y="10" fill="#9e9e9e" font-family="-apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="12" text-anchor="end">10.8%</text>
+      </g>
+      <g transform="translate(175, 89)">
         <circle cx="6" cy="6" r="6" fill="#3178c6" />
         <text x="18" y="10" fill="#9e9e9e" font-family="-apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="12">TypeScript</text>
-        <text x="130" y="10" fill="#9e9e9e" font-family="-apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="12" text-anchor="end">11.9%</text>
+        <text x="130" y="10" fill="#9e9e9e" font-family="-apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="12" text-anchor="end">10.3%</text>
       </g>
 </svg>
