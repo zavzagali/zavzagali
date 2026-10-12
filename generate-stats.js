@@ -9,11 +9,17 @@ const MAX_DETAIL = parseInt(process.env.LIFETIME_MAX_COMMITS || "20000", 10);
 const DETAIL_CONCURRENCY = 10;
 
 const EXCLUDED_REPOS = new Set(
-  (process.env.EXCLUDE_REPOS || "zavzagali/better-shoreline").split(",")
+  (process.env.EXCLUDE_REPOS || "").split(",")
     .map(s => s.trim().toLowerCase())
     .filter(Boolean)
 );
 const isExcluded = full => EXCLUDED_REPOS.has(String(full || "").toLowerCase());
+
+const IGNORE_FIRST_COMMIT_REPOS = new Set(
+  (process.env.IGNORE_FIRST_COMMIT_REPOS || "zavzagali/better-shoreline").split(",")
+    .map(s => s.trim().toLowerCase())
+    .filter(Boolean)
+);
 
 const LANGS = {
   js: { n: "JavaScript", c: "#f1e05a" },
@@ -350,6 +356,7 @@ async function getLifetimeDiffStats(allRepos) {
     console.log(`diff-stats: ${jobs.length} commits found, detail fetch capped at ${MAX_DETAIL} (set LIFETIME_MAX_COMMITS to raise) TRUNCATED-BY-CAP`);
     jobs = jobs.slice(0, MAX_DETAIL);
   }
+  const allDetails = [];
   for (let i = 0; i < jobs.length; i += DETAIL_CONCURRENCY) {
     const batch = await Promise.all(jobs.slice(i, i + DETAIL_CONCURRENCY).map(async j => {
       try {
@@ -357,30 +364,58 @@ async function getLifetimeDiffStats(allRepos) {
           () => octokit.repos.getCommit({ owner: j.owner, repo: j.repo, ref: j.sha }),
           `${j.full}@${j.sha.slice(0, 7)} detail`
         );
-        return { job: j, ok: true, stats: d.data.stats, files: d.data.files || [] };
+        return {
+          job: j,
+          ok: true,
+          stats: d.data.stats,
+          files: d.data.files || [],
+          parents: d.data.parents || [],
+          date: d.data.commit?.author?.date || d.data.commit?.committer?.date || null,
+        };
       } catch (e) {
         return { job: j, ok: false, status: e?.status };
       }
     }));
     for (const r of batch) {
       if (!r.ok) { failed++; if (!failStatus) failStatus = r.status; continue; }
-      commits++;
-      additions += r.stats?.additions || 0;
-      deletions += r.stats?.deletions || 0;
-      for (const f of r.files) {
-        const ext = (f.filename || "").split('.').pop().toLowerCase();
-        if (LANGS[ext]) {
-          const l = LANGS[ext].n;
-          if (!byRepoLang.has(r.job.full)) byRepoLang.set(r.job.full, new Map());
-          const m = byRepoLang.get(r.job.full);
-          m.set(l, (m.get(l) || 0) + (f.changes || 0));
-          if (!byRepoLangDiff.has(r.job.full)) byRepoLangDiff.set(r.job.full, new Map());
-          const md = byRepoLangDiff.get(r.job.full);
-          const e = md.get(l) || { a: 0, d: 0 };
-          e.a += f.additions || 0;
-          e.d += f.deletions || 0;
-          md.set(l, e);
-        }
+      allDetails.push(r);
+    }
+  }
+  const firstCommitShasToSkip = new Set();
+  for (const repoLower of IGNORE_FIRST_COMMIT_REPOS) {
+    const repoDetails = allDetails.filter(r => String(r.job.full || "").toLowerCase() === repoLower);
+    if (!repoDetails.length) continue;
+    const roots = repoDetails.filter(r => (r.parents?.length || 0) === 0);
+    if (roots.length) {
+      for (const r of roots) {
+        firstCommitShasToSkip.add(r.job.sha);
+      }
+    } else {
+      repoDetails.sort((a, b) => new Date(a.date || 0) - new Date(b.date || 0));
+      const first = repoDetails[0];
+      if (first) {
+        firstCommitShasToSkip.add(first.job.sha);
+      }
+    }
+  }
+  for (const r of allDetails) {
+    if (firstCommitShasToSkip.has(r.job.sha)) continue;
+    commits++;
+    additions += r.stats?.additions || 0;
+    deletions += r.stats?.deletions || 0;
+    for (const f of r.files) {
+      const ext = (f.filename || "").split('.').pop().toLowerCase();
+      if (LANGS[ext]) {
+        const l = LANGS[ext].n;
+        if (!byRepoLang.has(r.job.full)) byRepoLang.set(r.job.full, new Map());
+        const m = byRepoLang.get(r.job.full);
+        m.set(l, (m.get(l) || 0) + (f.changes || 0));
+        if (!byRepoLangDiff.has(r.job.full)) byRepoLangDiff.set(r.job.full, new Map());
+        const md = byRepoLangDiff.get(r.job.full);
+        const e = md.get(l) || { a: 0, d: 0 };
+        e.a += f.additions || 0;
+        e.d += f.deletions || 0;
+        md.set(l, e);
       }
     }
   }
