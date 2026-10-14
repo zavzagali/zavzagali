@@ -7,7 +7,7 @@ on:
     paths-ignore:
       - "assets/**"
   schedule:
-    - cron: "*/30 * * * *"
+    - cron: "*/15 * * * *"
   workflow_dispatch:
   repository_dispatch:
     types: [update-stats]
