@@ -1,12 +1,23 @@
 name: Update GitHub Stats
 
 on:
+  push:
+    branches:
+      - master
+    paths-ignore:
+      - "assets/**"
   schedule:
-    - cron: "0 0 * * *"
+    - cron: "*/30 * * * *"
   workflow_dispatch:
+  repository_dispatch:
+    types: [update-stats]
 
 jobs:
   update-cards:
+    if: github.actor != 'github-actions[bot]'
+    concurrency:
+      group: stats
+      cancel-in-progress: false
     runs-on: ubuntu-latest
     permissions:
       contents: write
